@@ -1,0 +1,54 @@
+{
+  "name": "node-template",
+  "version": "1.0.0",
+  "description": "Node.js template",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "ts-node lib/index.ts",
+    "build": "tsc lib/index.ts --outDir dist",
+    "test": "jest --no-watchman --maxWorkers=50%",
+    "coverage": "jest --coverage",
+    "lint": "eslint 'lib/**/*.ts'",
+    "lintfix": "eslint --fix 'lib/**/*.ts' && prettier --write 'lib/**/*.ts'",
+    "update": "npm i npm-check-updates@latest --save-dev && ncu -u && npm test",
+    "prepare": "husky install ./scripts/.husky && chmod ug+x scripts/.husky/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/romaleev/node-template.git"
+  },
+  "typedoc": {
+    "entryPoint": "lib/index.ts"
+  },
+  "lint-staged": {
+    "lib/**/*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "keywords": ["node-template"],
+  "author": "Roman Malieiev <aromaleev@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/romaleev/node-template/issues"
+  },
+  "homepage": "https://github.com/romaleev/node-template#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.3",
+    "@typescript-eslint/eslint-plugin": "^6.3.0",
+    "@typescript-eslint/parser": "^6.3.0",
+    "eslint": "^8.46.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "husky": "^8.0.3",
+    "jest": "^29.6.2",
+    "lint-staged": "^13.2.3",
+    "npm-check-updates": "^16.10.18",
+    "prettier": "^3.0.1",
+    "prettier-eslint": "^15.0.1",
+    "prettier-plugin-organize-imports": "^3.2.3",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  }
+}
