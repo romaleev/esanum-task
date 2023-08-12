@@ -15,9 +15,11 @@ Plain template powered with:
 
 Run `npm install` to install dependencies
 
-## Development server
+## Development
 
 Run `npm start` to start the project
+
+The application will automatically restart if you change any of the source files
 
 ## Build
 
