@@ -6,7 +6,8 @@
   "scripts": {
     "start": "nodemon lib/index.ts",
     "build": "tsc lib/index.ts --outDir dist",
-    "test": "jest --no-watchman --maxWorkers=50%",
+    "test": "jest --no-watchman --maxWorkers=80%",
+		"test-watch": "jest --watch --maxWorkers=80%",
     "coverage": "jest --coverage",
     "lint": "eslint 'lib/**/*.ts'",
     "lintfix": "eslint --fix 'lib/**/*.ts' && prettier --write 'lib/**/*.ts'",

@@ -29,6 +29,8 @@ Run `npm run build` to build the project. The build artifacts will be stored in 
 
 Run `npm test` to execute unit tests
 
+Run `npm run test-watch` to execute unit tests in watch mode
+
 ## Run test coverage
 
 Run `npm run coverage` to generate [coverage report](./coverage/lcov-report/index.html)
