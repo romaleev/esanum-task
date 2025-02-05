@@ -1,15 +1,24 @@
-# node-template
+# esanum-task
 
-## Task
+## Description
 
-Plain template powered with:
-- Typescript
-- ESLint lint, fix, coverage
-- Prettier lint, fix, organize imports
-- Pre-commit hook with lint staged
-- Editor config
-- Jest test
-- NPM check updates
+1. Develop a multi-user, high load, self-recovered web service to convert MP4
+	 to GIF
+2. Input MP4: maximum size 1024:768 length 10 seconds
+3. Output GIF: size -1:400, FPS = 5
+4. Package a service for Docker Swarm
+5. API should be able to accept up to 1000 convert requests per minute
+6. Time for waiting GIF for user could be from 5 seconds to 5 mins
+7. Write a simple load test via CURL
+8. The number of web server replicas is 1
+9. The number of worker replicas is up to 5
+
+Code should:
+1. Reliable and scalable solution
+2. Allow multi-user access
+3. Has clean architecture with best practices
+4. README how to start develop and deploy on production
+5. Has no useless parts or abandoned parts
 
 ## Installation
 
@@ -44,3 +53,14 @@ Run `npm run lintfix` for code quality fixes. It happens automatically in pre-co
 ## Update library versions
 
 Run `npm run update` to update libraries to the latest versions.
+
+## Environment
+
+Plain template powered with:
+- Typescript
+- ESLint lint, fix, coverage
+- Prettier lint, fix, organize imports
+- Pre-commit hook with lint staged
+- Editor config
+- Jest test
+- NPM check updates

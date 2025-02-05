@@ -20,12 +20,13 @@
     "isolatedModules": true,
     "noEmit": true,
 		"paths": {
-			"#lib/*": ["lib/*"],
-			"#tests/*": ["src/tests/*"]
+			"#client/*": ["src/client/*"],
+			"#server/*": ["src/server/*"],
+			"#tests/*": ["tests/*"]
 		}
 	},
   "include": [
-    "lib",
+    "src",
 		"tests"
   ]
 }

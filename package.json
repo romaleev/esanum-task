@@ -1,22 +1,22 @@
 {
-	"name": "node-template",
+	"name": "easnum-task",
 	"version": "1.0.0",
-	"description": "Node.js template",
+	"description": "esanum task",
 	"main": "dist/index.js",
 	"scripts": {
-		"start": "node --no-warnings=ExperimentalWarning --watch --import=tsx lib/index.ts",
-		"build": "tsc lib/index.ts --outDir dist",
+		"start": "node --no-warnings=ExperimentalWarning --watch --import=tsx src/server/index.ts",
+		"build": "tsc src/server/index.ts --outDir dist",
 		"test": "jest --no-watchman --maxWorkers=80%",
 		"test-watch": "jest --watch --maxWorkers=80%",
 		"coverage": "jest --coverage",
-		"lint": "eslint 'lib/**/*.ts' && prettier 'lib/**/*.ts'",
-		"lintfix": "eslint --fix 'lib/**/*.ts' && prettier --write 'lib/**/*.ts'",
+		"lint": "eslint 'src/**/*.ts' && prettier 'src/**/*.ts'",
+		"lintfix": "eslint --fix 'src/**/*.ts' && prettier --write 'src/**/*.ts'",
 		"update": "npm i npm-check-updates@latest --save-dev && ncu -u && npm i && npm audit fix && npm run lint && npm test",
 		"prepare": "husky"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+ssh://git@github.com/romaleev/node-template.git"
+		"url": "git+ssh://git@github.com/romaleev/esanum-task.git"
 	},
 	"type": "module",
 	"typedoc": {
@@ -32,14 +32,14 @@
 		]
 	},
 	"keywords": [
-		"node-template"
+		"esanum-task"
 	],
 	"author": "Roman Malieiev <aromaleev@gmail.com>",
-	"license": "ISC",
+	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/romaleev/node-template/issues"
+		"url": "https://github.com/romaleev/esanum-task/issues"
 	},
-	"homepage": "https://github.com/romaleev/node-template#readme",
+	"homepage": "https://github.com/romaleev/esanum-task#readme",
 	"devDependencies": {
 		"@types/jest": "^29.5.14",
 		"@types/node": "^22.13.1",
