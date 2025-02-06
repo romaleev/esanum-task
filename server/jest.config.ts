@@ -5,6 +5,10 @@ const config: Config.InitialOptions = {
 	preset: 'ts-jest',
 	testEnvironment: 'node',
 	testMatch: ['**/server/**/*.spec.ts'],
+	setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+	moduleNameMapper: {
+		'^#server/(.*)$': '<rootDir>/src/$1', // ✅ Maps `#server` to `server/src`
+	},
 	transform: {
 		'^.+\\.tsx?$': [
 			'ts-jest',
