@@ -23,6 +23,10 @@ Code should:
 ## Installation
 
 Run `npm install` to install dependencies
+Install [ffmpeg](https://ffmpeg.org/download.html) for video processing
+Install [imagemagick](https://imagemagick.org/script/download.php) for image processing
+Install and run [docker](https://docs.docker.com/get-docker/) for containerization
+Install [docker-compose](https://docs.docker.com/compose/install/) for container orchestration
 
 ## Development
 

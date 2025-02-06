@@ -8,9 +8,14 @@
 		"start": "npm-run-all --parallel start:*",
 		"start:client": "npm run start -w client",
 		"start:server": "npm run start -w server",
+		"start:worker": "npm run start:worker -w server",
+		"start:redis": "docker-compose up redis",
+		"stop:redis": "docker-compose down redis",
 		"build": "npm-run-all --parallel build:*",
 		"build:client": "npm run build -w client",
-		"build:server": "npm run build -w server",
+		"docker:prod": "docker-compose up -d",
+		"docker:update": "docker-compose up --build -d",
+		"docker:stop": "docker-compose down",
 		"test": "npm-run-all --parallel test:client test:server",
 		"test:watch": "npm-run-all --parallel test:watch:*",
 		"test:client": "npm run test -w client",
@@ -51,6 +56,7 @@
 	},
 	"homepage": "https://github.com/romaleev/esanum-task#readme",
 	"devDependencies": {
+		"@types/supertest": "^6.0.2",
 		"eslint": "^9.19.0",
 		"eslint-config-prettier": "^10.0.1",
 		"eslint-plugin-prettier": "^5.2.3",
@@ -62,6 +68,7 @@
 		"npm-run-all": "^4.1.5",
 		"prettier": "^3.4.2",
 		"prettier-eslint": "^16.3.0",
-		"prettier-plugin-organize-imports": "^4.1.0"
+		"prettier-plugin-organize-imports": "^4.1.0",
+		"supertest": "^7.0.0"
 	}
 }
