@@ -11,7 +11,7 @@ describe('POST /api/upload', () => {
 			.attach('file', fs.readFileSync(filePath), 'sample_1024_10SEC.mp4')
 
 		expect(res.status).toBe(200)
-		expect(res.body).toHaveProperty('jobId')
+		expect(res.body.jobId).toBe('1')
 	})
 })
 
@@ -27,5 +27,5 @@ describe('POST /api/upload - File Size Validation', () => {
 	})
 })
 
-// curl -X POST -F "file=@tests/sample_1280_30SEC_10MB.mp4" http://localhost:3000/api/upload
+// curl -X POST -F "file=@tests/sample_1024_10SEC.mp4;type=video/mp4" http://localhost:3000/api/upload
 // curl -X GET http://localhost:3000/api/status/1

@@ -24,7 +24,6 @@ Code should:
 
 Run `npm install` to install dependencies
 Install [ffmpeg](https://ffmpeg.org/download.html) for video processing
-Install [imagemagick](https://imagemagick.org/script/download.php) for image processing
 Install and run [docker](https://docs.docker.com/get-docker/) for containerization
 Install [docker-compose](https://docs.docker.com/compose/install/) for container orchestration
 
@@ -42,17 +41,13 @@ Run `npm run build` to build the project. The build artifacts will be stored in 
 
 Run `npm test` to execute unit tests
 
-Run `npm run test-watch` to execute unit tests in watch mode
-
-## Run test coverage
-
-Run `npm run coverage` to generate [coverage report](./coverage/lcov-report/index.html)
+Run `npm run test:watch` to execute unit tests in watch mode
 
 ## Run code quality checks
 
 Run `npm run lint` for code quality checks.
 
-Run `npm run lintfix` for code quality fixes. It happens automatically in pre-commit hook.
+Run `npm run lint:fix` for code quality fixes. It happens automatically in pre-commit hook.
 
 ## Update library versions
 
