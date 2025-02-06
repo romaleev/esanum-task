@@ -4,9 +4,6 @@
   "compilerOptions": {
     "skipLibCheck": true,
     "outDir": "./out-tsc/spec",
-    "types": [
-      "jasmine"
-    ]
   },
   "include": [
     "src/**/*.spec.ts",

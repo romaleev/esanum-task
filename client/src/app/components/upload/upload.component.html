@@ -1,0 +1,36 @@
+<div class="upload-container">
+	<h1>MP4 to GIF Converter</h1>
+
+	<mat-card class="upload-card">
+		<mat-card-content>
+			<div class="button-group">
+				<button mat-raised-button color="primary" (click)="fileInput.click()" [disabled]="loading">Choose File</button>
+				<input type="file" #fileInput (change)="onFileSelected($event)" hidden />
+
+				<button
+					mat-raised-button
+					color="accent"
+					(click)="uploadFile()"
+					[disabled]="!selectedFile || loading"
+				>
+					Upload
+				</button>
+			</div>
+
+      <div *ngIf="selectedFile as file" class="file-name">
+        {{ file.name }}
+      </div>
+
+			<div class="loading-spinner" *ngIf="loading">
+				<mat-spinner diameter="40"></mat-spinner>
+			</div>
+		</mat-card-content>
+	</mat-card>
+
+	<mat-card class="result-card" *ngIf="gifUrl">
+		<mat-card-title>Conversion Completed</mat-card-title>
+		<mat-card-content>
+			<img [src]="gifUrl" alt="Converted GIF" class="gif-preview" />
+		</mat-card-content>
+	</mat-card>
+</div>
