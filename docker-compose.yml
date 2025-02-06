@@ -1,0 +1,40 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./server/.env  # ✅ Ensure backend uses environment variables
+    command: npm run prod  # ✅ Override the command for worker
+    depends_on:
+      - redis
+    restart: on-failure  # ✅ Restart if it crashes, but not manually stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: ./client/Dockerfile
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend
+    restart: unless-stopped  # ✅ Restart unless manually stopped
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    restart: always  # ✅ Redis should always restart to ensure stability
+
+  worker:
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile  # ✅ Use the same Dockerfile
+    command: npm run prod:worker  # ✅ Override the command for worker
+    depends_on:
+      - redis
+    restart: on-failure
+    deploy:
+      replicas: 5  # ✅ Scale workers dynamically
