@@ -27,5 +27,5 @@ describe('POST /api/upload - File Size Validation', () => {
 	})
 })
 
-// curl -X POST -F "file=@tests/sample_1024_10SEC.mp4;type=video/mp4" http://localhost:3000/api/upload
+// curl -X POST -F "file=@server/tests/fixtures/sample_1024_10SEC.mp4;type=video/mp4" http://localhost:3000/api/upload
 // curl -X GET http://localhost:3000/api/status/1

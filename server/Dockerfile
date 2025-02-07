@@ -1,6 +1,9 @@
 # Use official Node.js image
 FROM node:18-alpine
 
+# Install FFmpeg
+RUN apk add --no-cache ffmpeg
+
 # Set working directory
 WORKDIR /app
 

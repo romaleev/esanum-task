@@ -1,5 +1,5 @@
 # Use official Node.js image
-FROM node:18-alpine
+FROM node:18-alpine AS client
 
 # Set working directory
 WORKDIR /app
@@ -19,5 +19,10 @@ COPY . .
 # Build
 RUN npm run build -w client
 
+# 🚀 Nginx Stage
+FROM nginx:alpine
+WORKDIR /usr/share/nginx/html
+COPY --from=client /app/dist/mp4-to-gif-client ./
+
 # Expose Angular port
-EXPOSE 4200
+EXPOSE 80

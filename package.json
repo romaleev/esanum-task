@@ -16,6 +16,7 @@
 		"docker:up": "docker-compose up -d",
 		"docker:build": "docker-compose up --build -d",
 		"docker:down": "docker-compose down",
+		"docker:logs": "docker compose logs --follow --tail 100",
 		"test": "npm-run-all --parallel test:client test:server",
 		"test:watch": "npm-run-all --parallel test:watch:*",
 		"test:client": "npm run test -w client",
