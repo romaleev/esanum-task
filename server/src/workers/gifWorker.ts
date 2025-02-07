@@ -31,7 +31,10 @@ if (isDev) {
 queue.process((job: GifJob, done) => {
 	if (isDev) console.log(`🔔 [WORKER] Job received - ID: ${job.id}`)
 	const inputPath = job.data.filePath
-	const outputPath = path.join('uploads', `${job.id}.gif`)
+	const outputPath = path.join('app/uploads', `${job.id}.gif`)
+
+	console.log(`🎬 [WORKER] Processing input file ${inputPath}`)
+	console.log(`🎬 [WORKER] Output file path: ${outputPath}`)
 
 	if (isDev) console.log(`🎬 [WORKER] Processing job - ID: ${job.id}`)
 

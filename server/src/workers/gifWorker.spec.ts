@@ -10,7 +10,7 @@ describe('Gif Worker', () => {
 
 		await job.finished()
 
-		const expectedPath = path.join('uploads', `${job.id}.gif`)
+		const expectedPath = path.join('app/uploads', `${job.id}.gif`)
 		expect(fs.existsSync(expectedPath)).toBe(true)
 	})
 })

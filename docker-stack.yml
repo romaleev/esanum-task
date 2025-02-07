@@ -1,0 +1,78 @@
+services:
+  backend:
+    image: esanum-task-backend:latest
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+    env_file:
+      - ./server/.env  # ✅ Load .env variables
+    command: npm run prod:server -w server
+    depends_on:
+      - redis
+    volumes:
+      - uploads:/app/uploads
+    deploy:
+      mode: replicated
+      replicas: 1  # ✅ Single instance of backend
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
+  frontend:
+    image: esanum-task-frontend:latest
+    build:
+      context: .
+      dockerfile: ./client/Dockerfile
+    ports:
+      - "4200:80"
+    command: nginx -g 'daemon off;'
+    depends_on:
+      - backend
+    deploy:
+      mode: replicated
+      replicas: 1  # ✅ Single frontend instance
+      restart_policy:
+        condition: any
+        delay: 5s
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any  # ✅ Restart always
+        delay: 5s
+
+  worker:
+    image: esanum-task-worker:latest
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile
+    command: npm run prod:worker -w server
+    depends_on:
+      - backend
+      - redis
+    volumes:
+      - uploads:/app/uploads
+      - fixtures:/app/tests/fixtures
+    deploy:
+      mode: replicated
+      replicas: 5  # ✅ Scale dynamically
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 5
+        window: 120s
+
+volumes:
+  uploads:
+  fixtures:

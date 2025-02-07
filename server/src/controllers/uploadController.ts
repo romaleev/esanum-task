@@ -9,7 +9,18 @@ export const uploadFile = async (req: Request, res: Response): Promise<void> => 
 			return
 		}
 
-		const job: GifJob | null = await queue.add(
+		console.log(`📤 [UPLOAD] Received file: ${req.file.originalname}`)
+		console.log(`📤 [UPLOAD] File path: ${req.file.path}`)
+		console.log(`📤 [UPLOAD] Going to add to the queue`)
+
+		const isQueueReachable = await queue.isReady()
+		if (!isQueueReachable) {
+			res.status(500).json({ error: 'Queue service is not reachable' })
+			return
+		}
+
+		console.log(`📤 [UPLOAD] Queue is reachable`)
+		const job: GifJob = await queue.add(
 			{ filePath: req.file.path },
 			{
 				removeOnComplete: { age: 300, count: 10 }, // Keep job for 5 minutes (300s)
@@ -17,7 +28,12 @@ export const uploadFile = async (req: Request, res: Response): Promise<void> => 
 			},
 		)
 
-		console.log(`📌 [UPLOAD] Job added to queue - ID ${job.id}, path: ${req.file.path}`)
+		if (!job) {
+			res.status(500).json({ error: 'Failed to add job to the queue' })
+			return
+		}
+
+		console.log(`📌[UPLOAD] Job added to queue - ID ${job.id}, path: ${req.file.path}`)
 
 		res.json({ jobId: job.id })
 	} catch (error) {

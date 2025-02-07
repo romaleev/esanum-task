@@ -22,7 +22,8 @@ RUN npm run build -w client
 # 🚀 Nginx Stage
 FROM nginx:alpine
 WORKDIR /usr/share/nginx/html
-COPY --from=client /app/dist/mp4-to-gif-client ./
+COPY ../scripts/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=client /app/client/dist/mp4-to-gif-client/ /usr/share/nginx/html
 
 # Expose Angular port
 EXPOSE 80
