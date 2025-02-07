@@ -8,8 +8,9 @@ describe('Gif Worker', () => {
 		const inputPath = path.resolve('../tests/sample_1024_10SEC.mp4')
 		const job: Job<string> = await queue.add({ filePath: inputPath })
 
-		const result: string = await job.finished()
+		await job.finished()
 
-		expect(fs.existsSync(result)).toBe(true)
+		const expectedPath = path.join('uploads', `${job.id}.gif`)
+		expect(fs.existsSync(expectedPath)).toBe(true)
 	})
 })

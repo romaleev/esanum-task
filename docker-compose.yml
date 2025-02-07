@@ -1,5 +1,7 @@
 services:
   backend:
+    environment:
+      - NODE_ENV=production  # ✅ Set environment variables for worker
     build:
       context: .
       dockerfile: ./server/Dockerfile
@@ -29,6 +31,8 @@ services:
     restart: always  # ✅ Redis should always restart to ensure stability
 
   worker:
+    environment:
+      - NODE_ENV=production  # ✅ Set environment variables for worker
     build:
       context: .
       dockerfile: ./server/Dockerfile  # ✅ Use the same Dockerfile

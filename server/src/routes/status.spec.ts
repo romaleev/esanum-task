@@ -33,7 +33,6 @@ describe('GET /api/status/:jobId (SSE)', () => {
 
 			eventSource.onmessage = (event) => {
 				const data = JSON.parse(event.data)
-				console.log(`🔄 SSE Event Received: ${JSON.stringify(data)}`)
 
 				if (data.status === 'completed') {
 					jobCompleted = true

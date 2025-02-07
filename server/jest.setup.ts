@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'development'
+
 import { queue } from '#server/services/queueService'
 
 beforeAll(async () => {

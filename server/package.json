@@ -5,8 +5,8 @@
 	"private": true,
 	"scripts": {
 		"start": "npm-run-all --parallel --race start:server start:worker",
-		"start:server": "wait-on tcp:localhost:6379 && node --no-warnings=ExperimentalWarning --watch --import=tsx src/index.ts",
-		"start:worker": "wait-on http://localhost:3000 && node --no-warnings=ExperimentalWarning --watch --import=tsx src/workers/gifWorker.ts",
+		"start:server": "wait-on tcp:localhost:6379 && NODE_ENV=development node --no-warnings=ExperimentalWarning --watch --import=tsx src/index.ts",
+		"start:worker": "wait-on http://localhost:3000 && NODE_ENV=development node --no-warnings=ExperimentalWarning --watch --import=tsx src/workers/gifWorker.ts",
 		"build": "tsc --project tsconfig.server.json && tsc-alias --project tsconfig.server.json",
 		"prod:server": "pm2-runtime start ecosystem.config.cjs --only server",
 		"prod:worker": "pm2-runtime start ecosystem.config.cjs --only worker",

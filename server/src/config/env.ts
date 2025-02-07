@@ -1,6 +1,8 @@
 import dotenv from 'dotenv'
 dotenv.config()
 
+export const isDev = process.env.NODE_ENV === 'development'
+
 export const config = {
 	port: process.env.PORT || 3000,
 	redisHost: process.env.REDIS_HOST || '127.0.0.1',
