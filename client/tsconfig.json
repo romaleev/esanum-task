@@ -1,9 +1,11 @@
 /* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
-  "extends": "../tsconfig.base.json",
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
+		"paths": {
+			"#client/*": ["src/app/*"]
+		},
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,

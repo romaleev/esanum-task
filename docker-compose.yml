@@ -7,7 +7,7 @@ services:
       - "3000:3000"
     env_file:
       - ./server/.env  # ✅ Ensure backend uses environment variables
-    command: npm run prod  # ✅ Override the command for worker
+    command: npm run prod:server  # ✅ Override the command for worker
     depends_on:
       - redis
     restart: on-failure  # ✅ Restart if it crashes, but not manually stopped
@@ -34,6 +34,7 @@ services:
       dockerfile: ./server/Dockerfile  # ✅ Use the same Dockerfile
     command: npm run prod:worker  # ✅ Override the command for worker
     depends_on:
+      - backend
       - redis
     restart: on-failure
     deploy:

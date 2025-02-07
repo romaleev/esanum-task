@@ -4,24 +4,19 @@ FROM node:18-alpine
 # Set working directory
 WORKDIR /app
 
-# ✅ Copy only the global package.json and package-lock.json
-COPY ../../package.json ../../package-lock.json ./
+# ✅ Copy the root package files first (to optimize Docker layer caching)
+COPY ../package.json ../package-lock.json ./
 
-# ✅ Copy the local server package.json (no package-lock.json in server/)
-COPY ./package.json ./
+# ✅ Copy the client package.json correctly inside the right workspace folder
+COPY ./client/package.json ./client/
 
-# ✅ Install dependencies using the global package-lock.json
-RUN npm install
-
-RUN npm install -g @angular/cli
-
-# ✅ Confirm Angular CLI is installed
-RUN ng version
+# ✅ Ensure dependencies are installed correctly, including workspace dependencies
+RUN npm install --workspace client --ignore-scripts
 
 # Copy all Angular code
 COPY . .
 
-# Build Angular App
+# Build
 RUN npm run build -w client
 
 # Expose Angular port
