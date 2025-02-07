@@ -9,7 +9,13 @@ export const uploadFile = async (req: Request, res: Response): Promise<void> => 
 			return
 		}
 
-		const job: GifJob | null = await queue.add({ filePath: req.file.path })
+		const job: GifJob | null = await queue.add(
+			{ filePath: req.file.path },
+			{
+				removeOnComplete: { age: 300, count: 10 }, // Keep job for 5 minutes (300s)
+				removeOnFail: { age: 600, count: 5 }, // Keep failed jobs for 10 minutes (600s)
+			},
+		)
 
 		console.log(`📌 [UPLOAD] Job added to queue - ID ${job.id}, path: ${req.file.path}`)
 
