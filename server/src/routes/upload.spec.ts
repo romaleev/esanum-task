@@ -5,7 +5,7 @@ import app from '#server/app'
 
 describe('POST /api/upload', () => {
 	it('should accept an MP4 file and return a jobId', async () => {
-		const filePath = path.resolve('../tests/sample_1024_10SEC.mp4')
+		const filePath = path.resolve('./tests/fixtures/sample_1024_10SEC.mp4')
 		const res = await request(app)
 			.post('/api/upload')
 			.attach('file', fs.readFileSync(filePath), 'sample_1024_10SEC.mp4')

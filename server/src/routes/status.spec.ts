@@ -6,7 +6,7 @@ import { EventSource } from 'eventsource'
 
 describe('GET /api/status/:jobId (SSE)', () => {
 	it('should stream job status updates via SSE', async () => {
-		const filePath = path.resolve('../tests/sample_1024_10SEC.mp4')
+		const filePath = path.resolve('./tests/fixtures/sample_1024_10SEC.mp4')
 
 		// ✅ Upload file and get jobId
 		const uploadRes = await request(app)

@@ -10,7 +10,8 @@
 		"build": "tsc --project tsconfig.server.json && tsc-alias --project tsconfig.server.json",
 		"prod:server": "pm2-runtime start ecosystem.config.cjs --only server",
 		"prod:worker": "pm2-runtime start ecosystem.config.cjs --only worker",
-		"test": "jest --no-watchman --maxWorkers=80% --detectOpenHandles",
+		"test": "jest --no-watchman --maxWorkers=80% --detectOpenHandles --testPathIgnorePatterns load.spec.ts",
+		"test:load": "jest --no-watchman --maxWorkers=80% --detectOpenHandles --testPathPattern load.spec.ts",
 		"test:watch": "jest --watch --maxWorkers=80%",
 		"test:coverage": "jest --coverage"
 	},

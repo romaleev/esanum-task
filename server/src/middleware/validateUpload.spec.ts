@@ -13,7 +13,7 @@ it('should return 400 for unsupported file format', async () => {
 })
 
 it('should return 400 for video exceeding resolution limit', async () => {
-	const filePath = path.resolve('../tests/sample_1280_10SEC.mp4') // Mock a large resolution file
+	const filePath = path.resolve('./tests/fixtures/sample_1280_10SEC.mp4') // Mock a large resolution file
 	const res = await request(app)
 		.post('/api/upload')
 		.attach('file', fs.readFileSync(filePath), 'sample_1280_10SEC.mp4')
@@ -23,7 +23,7 @@ it('should return 400 for video exceeding resolution limit', async () => {
 })
 
 it('should return 400 for video exceeding duration limit', async () => {
-	const filePath = path.resolve('../tests/sample_1024_15SEC.mp4') // Mock a long video
+	const filePath = path.resolve('./tests/fixtures/sample_1024_15SEC.mp4') // Mock a long video
 	const res = await request(app)
 		.post('/api/upload')
 		.attach('file', fs.readFileSync(filePath), 'sample_1024_15SEC.mp4')

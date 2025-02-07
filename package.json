@@ -19,6 +19,7 @@
 		"test": "npm-run-all --parallel test:client test:server",
 		"test:watch": "npm-run-all --parallel test:watch:*",
 		"test:client": "npm run test -w client",
+		"test:load": "npm run test:load -w server",
 		"test:watch:client": "npm run test:watch -w client",
 		"test:server": "npm run test -w server",
 		"test:watch:server": "npm run test:watch -w server",
