@@ -5,8 +5,8 @@
 	"private": true,
 	"scripts": {
 		"start": "npm-run-all --parallel --race start:server start:worker",
-		"start:server": "node --no-warnings=ExperimentalWarning --watch --import=tsx src/index.ts",
-		"start:worker": "node --no-warnings=ExperimentalWarning --watch --import=tsx src/workers/gifWorker.ts",
+		"start:server": "wait-on tcp:localhost:6379 && node --no-warnings=ExperimentalWarning --watch --import=tsx src/index.ts",
+		"start:worker": "wait-on http://localhost:3000 && node --no-warnings=ExperimentalWarning --watch --import=tsx src/workers/gifWorker.ts",
 		"build": "tsc --project tsconfig.server.json && tsc-alias --project tsconfig.server.json",
 		"prod:server": "pm2-runtime start ecosystem.config.cjs --only server",
 		"prod:worker": "pm2-runtime start ecosystem.config.cjs --only worker",
@@ -21,6 +21,7 @@
 		"@types/jest": "^29.5.14",
 		"@types/multer": "^1.4.12",
 		"@types/node": "^22.13.1",
+		"eventsource": "^3.0.5",
 		"jest": "^29.7.0",
 		"jiti": "^2.4.2",
 		"ts-jest": "^29.2.5",
@@ -28,7 +29,8 @@
 		"tsc-alias": "^1.8.10",
 		"tsx": "^4.19.2",
 		"typescript": "^5.7.3",
-		"typescript-eslint": "^8.23.0"
+		"typescript-eslint": "^8.23.0",
+		"wait-on": "^8.0.2"
 	},
 	"dependencies": {
 		"@ffmpeg-installer/ffmpeg": "^1.1.0",

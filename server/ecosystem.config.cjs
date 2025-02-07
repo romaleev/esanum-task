@@ -18,6 +18,7 @@ module.exports = {
 			script: 'dist/workers/gifWorker.js',
 			exec_mode: 'fork', // Single worker per container
 			instances: 1, // Only one worker per container
+			wait_ready: true,
 			autorestart: true,
 			interpreter: 'node',
 			max_memory_restart: '500M',

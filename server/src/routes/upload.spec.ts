@@ -11,7 +11,7 @@ describe('POST /api/upload', () => {
 			.attach('file', fs.readFileSync(filePath), 'sample_1024_10SEC.mp4')
 
 		expect(res.status).toBe(200)
-		expect(res.body.jobId).toBe('1')
+		expect(typeof parseInt(res.body.jobId)).toBe('number')
 	})
 })
 

@@ -22,11 +22,29 @@ export class UploadComponent {
 	onFileSelected(event: Event): void {
 		const input = event.target as HTMLInputElement
 		if (input.files && input.files.length > 0) {
-			this.selectedFile = input.files[0]
+			const file = input.files[0]
+
+			// ✅ Validate file type
+			if (file.type !== 'video/mp4') {
+				this.snackBar.open('❌ Invalid file format. Only MP4 is allowed.', 'Close', {
+					duration: 5000,
+				})
+				return
+			}
+
+			// ✅ Validate file size (Max: 10MB)
+			const maxSizeMB = 10
+			if (file.size > maxSizeMB * 1024 * 1024) {
+				this.snackBar.open(`❌ File is too large. Max ${maxSizeMB}MB allowed.`, 'Close', {
+					duration: 5000,
+				})
+				return
+			}
+
+			this.selectedFile = file
 		}
 		input.value = ''
 	}
-
 	uploadFile(): void {
 		if (!this.selectedFile) return
 		this.loading = true
