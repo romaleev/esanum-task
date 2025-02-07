@@ -1,7 +1,6 @@
-import { Component } from '@angular/core'
+import { Component, NgZone } from '@angular/core'
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http'
 import { MatSnackBar } from '@angular/material/snack-bar'
-import { interval, switchMap, takeWhile } from 'rxjs'
 
 @Component({
 	selector: 'app-upload',
@@ -17,6 +16,7 @@ export class UploadComponent {
 	constructor(
 		private http: HttpClient,
 		private snackBar: MatSnackBar,
+		private ngZone: NgZone,
 	) {}
 
 	onFileSelected(event: Event): void {
@@ -24,6 +24,7 @@ export class UploadComponent {
 		if (input.files && input.files.length > 0) {
 			this.selectedFile = input.files[0]
 		}
+		input.value = ''
 	}
 
 	uploadFile(): void {
@@ -37,32 +38,48 @@ export class UploadComponent {
 				reportProgress: true,
 				observe: 'events',
 			})
-			.subscribe((event: HttpEvent<{ jobId: string }>) => {
-				if (event.type === HttpEventType.Response) {
-					this.jobId = event.body?.jobId || null
-					this.pollJobStatus()
-				}
+			.subscribe({
+				next: (event: HttpEvent<{ jobId: string }>) => {
+					if (event.type === HttpEventType.Response) {
+						this.jobId = event.body?.jobId || null
+						this.sseJobStatus()
+					}
+				},
+				error: (error) => {
+					this.loading = false
+					let errorMessage = 'An unexpected error occurred.'
+
+					if (error.status === 400) {
+						errorMessage = error.error?.error || 'Invalid file format or file too large.'
+					} else if (error.status === 413) {
+						errorMessage = 'File is too large. Please upload a smaller file.'
+					} else if (error.status === 500) {
+						errorMessage = 'Server error. Please try again later.'
+					}
+
+					this.snackBar.open(`❌ Upload Failed: ${errorMessage}`, 'Close', {
+						duration: 5000,
+					})
+				},
 			})
 	}
 
-	pollJobStatus(): void {
-		interval(3000)
-			.pipe(
-				switchMap(() =>
-					this.http.get<{ status: string; gifUrl?: string; error?: string }>(
-						`/api/status/${this.jobId}`,
-					),
-				),
-				takeWhile(
-					(response) => response.status !== 'completed' && response.status !== 'failed',
-					true,
-				),
-			)
-			.subscribe((response) => {
+	sseJobStatus(): void {
+		if (!this.jobId) return
+
+		// Create an EventSource for SSE
+		const eventSource = new EventSource(`/api/status/${this.jobId}`)
+
+		eventSource.onmessage = (event) => {
+			this.ngZone.run(() => {
+				const response: { status: string; gifUrl?: string; error?: string } = JSON.parse(event.data)
+
 				if (response.status === 'completed' && response.gifUrl) {
 					this.gifUrl = response.gifUrl
 					this.loading = false
-					this.snackBar.open('🎉 GIF conversion complete!', 'Close', { duration: 3000 })
+					this.selectedFile = null
+					// this.snackBar.open('🎉 GIF conversion complete!', 'Close', { duration: 3000 })
+					eventSource.close() // Stop listening once done
 				} else if (response.status === 'failed') {
 					this.loading = false
 					this.snackBar.open(
@@ -72,7 +89,17 @@ export class UploadComponent {
 							duration: 5000,
 						},
 					)
+					eventSource.close() // Stop listening on failure
 				}
 			})
+		}
+
+		eventSource.onerror = () => {
+			this.ngZone.run(() => {
+				// ✅ Ensure UI updates when an error occurs
+				eventSource.close()
+				this.snackBar.open('❌ Connection lost. Please try again.', 'Close', { duration: 5000 })
+			})
+		}
 	}
 }

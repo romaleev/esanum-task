@@ -9,9 +9,9 @@ export const uploadFile = async (req: Request, res: Response): Promise<void> => 
 			return
 		}
 
-		const job: GifJob | null = await queue.add('convertGif', { filePath: req.file.path })
+		const job: GifJob | null = await queue.add({ filePath: req.file.path })
 
-		console.log(`📌 [UPLOAD] Job added to queue - ID ${req.file.path}: ${job.id}`)
+		console.log(`📌 [UPLOAD] Job added to queue - ID ${job.id}, path: ${req.file.path}`)
 
 		res.json({ jobId: job.id })
 	} catch (error) {
