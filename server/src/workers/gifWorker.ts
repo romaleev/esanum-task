@@ -7,7 +7,7 @@ import { isDev, config } from '#server/common/env'
 import os from 'os'
 import { Job, Worker } from 'bullmq'
 
-const concurrency = os.cpus().length - 1
+const concurrency = isDev ? os.cpus().length - 1 : 1
 
 new Worker(
 	'gifQueue',
@@ -31,11 +31,11 @@ new Worker(
 				'-preset',
 				'ultrafast',
 				'-threads',
-				'auto',
+				'1',
 				outputPath,
 			])
 
-			// ffmpeg.stderr.on('data', (data: Buffer) => console.error(`FFmpeg: ${data.toString()}`))
+			ffmpeg.stderr.on('data', (data: Buffer) => console.error(`FFmpeg: ${data.toString()}`))
 
 			ffmpeg.on('close', async (code: number) => {
 				if (code === 0) {

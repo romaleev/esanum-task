@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 
 dotenv.config({ path: process.env.NODE_ENV === 'production' ? '.env.production' : '.env' })
 
-export const isDev = true // process.env.NODE_ENV === 'development'
+export const isDev = process.env.NODE_ENV === 'development'
 
 export const config = {
 	port: process.env.PORT || 3000,

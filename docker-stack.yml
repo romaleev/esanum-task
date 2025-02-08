@@ -62,7 +62,6 @@ services:
       - redis
     volumes:
       - uploads:/app/uploads
-      - fixtures:/app/tests/fixtures
     deploy:
       mode: replicated
       replicas: 5  # ✅ Scale dynamically
@@ -72,4 +71,3 @@ services:
 
 volumes:
   uploads:
-  fixtures:
