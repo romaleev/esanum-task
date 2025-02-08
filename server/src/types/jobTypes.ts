@@ -4,7 +4,7 @@ import { Job, JobStatus } from 'bull'
  * Defines the structure of job data for GIF conversion.
  */
 export interface GifJobData {
-	filePath: string
+	filename: string
 }
 
 /**

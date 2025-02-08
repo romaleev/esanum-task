@@ -21,7 +21,7 @@ export const streamJobStatus = async (req: Request, res: Response<JobStatusRespo
 		const state = await job.getState()
 		const responseData = JSON.stringify({
 			status: state,
-			gifUrl: state === 'completed' ? `/uploads/${job.id}.gif` : null,
+			gifUrl: state === 'completed' ? `/api/gif/${job.id}.gif` : null,
 		})
 		res.write(`data: ${responseData}\n\n`)
 	}

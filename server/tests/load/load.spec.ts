@@ -18,8 +18,11 @@ describe('Performance Test - Upload Load', () => {
 			const startTime = performance.now()
 
 			// Step 1: Upload files and collect job IDs
-			const uploadPromises = Array.from({ length: CONCURRENT_UPLOADS }, async () => {
-				const res = await request(app).post('/api/upload').attach('file', fileBuffer, 'sample.mp4')
+			const uploadPromises = Array.from({ length: CONCURRENT_UPLOADS }, async (_, index) => {
+				const res = await request(`http://localhost:4200`)
+					.post('/api/upload')
+					.attach('file', fileBuffer, 'sample_1024_10SEC.mp4')
+				console.log(`Upload ${index + 1}/${CONCURRENT_UPLOADS} completed`)
 				return res.body.jobId
 			})
 
@@ -29,7 +32,7 @@ describe('Performance Test - Upload Load', () => {
 			const checkCompletion = async () => {
 				const statuses = await Promise.all(
 					jobIds.map(async (jobId) => {
-						const res = await request(app).get(`/api/status/${jobId}`)
+						const res = await request('http://localhost:4200').get(`/api/status/${jobId}`)
 						return res.body.status
 					}),
 				)
@@ -39,9 +42,14 @@ describe('Performance Test - Upload Load', () => {
 
 			let completed = false
 			const timeout = performance.now() + TIMEOUT_SEC * 1000
+			let pollCount = 0
 
 			while (!completed && performance.now() < timeout) {
 				completed = await checkCompletion()
+				pollCount++
+				console.log(
+					`Polling attempt ${pollCount}: ${completed ? 'All jobs completed' : 'Jobs still in progress'}`,
+				)
 				if (!completed) await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS))
 			}
 

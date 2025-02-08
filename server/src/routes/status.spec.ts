@@ -3,6 +3,7 @@ import app from '#server/app'
 import fs from 'fs'
 import path from 'path'
 import { EventSource } from 'eventsource'
+import { config } from '#server/common/env'
 
 describe('GET /api/status/:jobId (SSE)', () => {
 	it('should stream job status updates via SSE', async () => {
@@ -19,7 +20,7 @@ describe('GET /api/status/:jobId (SSE)', () => {
 		const jobId = uploadRes.body.jobId
 
 		// ✅ Open SSE connection to listen for status updates
-		const eventSource = new EventSource(`http://localhost:3000/api/status/${jobId}`)
+		const eventSource = new EventSource(`http://localhost:${config.port}/api/status/${jobId}`)
 
 		let jobCompleted = false
 		let jobFailed = false

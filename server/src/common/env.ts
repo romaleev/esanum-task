@@ -12,4 +12,5 @@ export const config = {
 	redisPort: process.env.REDIS_PORT || '6379',
 	maxUploadFileSize: process.env.MAX_UPLOAD_FILE_SIZE_MB || '10',
 	maxFileAgeMin: process.env.MAX_FILE_AGE_MIN || '10',
+	rootDir: process.env.ROOT_DIR || './uploads',
 }

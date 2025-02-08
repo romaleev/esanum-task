@@ -1,8 +1,10 @@
 import { queue } from '#server/services/queueService'
-import { exec } from 'child_process'
+import { spawn } from 'child_process'
 import path from 'path'
+import { promises as fs } from 'fs'
 import { GifJob } from '#server/types/jobTypes'
-import { isDev } from '#server/config/env'
+import { isDev, config } from '#server/common/env'
+import os from 'os'
 
 if (isDev) {
 	console.log('🔧 [WORKER] Worker script started!!')
@@ -28,10 +30,12 @@ if (isDev) {
 	})
 }
 
-queue.process((job: GifJob, done) => {
+const cores = os.cpus().length - 1
+
+queue.process(cores, (job: GifJob, done) => {
 	if (isDev) console.log(`🔔 [WORKER] Job received - ID: ${job.id}`)
-	const inputPath = job.data.filePath
-	const outputPath = path.join('app/uploads', `${job.id}.gif`)
+	const inputPath = path.join(config.rootDir, job.data.filename)
+	const outputPath = path.join(config.rootDir, `${job.id}.gif`)
 
 	console.log(`🎬 [WORKER] Processing input file ${inputPath}`)
 	console.log(`🎬 [WORKER] Output file path: ${outputPath}`)
@@ -39,15 +43,52 @@ queue.process((job: GifJob, done) => {
 	if (isDev) console.log(`🎬 [WORKER] Processing job - ID: ${job.id}`)
 
 	return new Promise<string>((resolve, reject) => {
-		exec(`ffmpeg -y -i ${inputPath} -vf "scale=-1:400,fps=5" ${outputPath}`, async (error) => {
-			if (error) {
-				console.error(`FFmpeg Error: ${error.message}`)
-				reject(error)
-			} else {
-				console.log(`GIF Created: ${outputPath}`)
+		const ffmpeg = spawn('ffmpeg', [
+			'-y',
+			'-i',
+			inputPath,
+			'-vf',
+			'scale=-1:400,fps=5',
+			'-preset',
+			'ultrafast',
+			'-threads',
+			'auto',
+			outputPath,
+		])
+
+		// ffmpeg.stderr.on('data', (data: Buffer) => console.error(`FFmpeg: ${data.toString()}`))
+
+		ffmpeg.on('close', async (code: number) => {
+			if (code === 0) {
+				console.log(`✅ GIF Created: ${outputPath}`)
+
+				// Delete input file
+				try {
+					await fs.rm(inputPath)
+					console.log(`🗑️ Deleted: ${inputPath}`)
+				} catch (err) {
+					console.error(`❌ Failed to delete file: ${err}`)
+				}
+
 				done()
 				resolve(outputPath)
+			} else {
+				console.error(`❌ FFmpeg failed with exit code: ${code}`)
+				reject(new Error(`FFmpeg failed with code ${code}`))
 			}
 		})
+		// exec(
+		// 	`ffmpeg -y -i ${inputPath} -vf "scale=-1:400,fps=5" ${outputPath} -preset ultrafast -threads auto`,
+		// 	async (error) => {
+		// 		if (error) {
+		// 			console.error(`FFmpeg Error: ${error.message}`)
+		// 			reject(error)
+		// 		} else {
+		// 			console.log(`GIF Created: ${outputPath}`)
+		// 			done()
+		// 			resolve(outputPath)
+		// 		}
+		// 	},
+		// )
 	})
 })

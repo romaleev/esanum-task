@@ -3,6 +3,7 @@ import cors from 'cors'
 import uploadRoutes from '#server/routes/upload'
 import statusRoutes from '#server/routes/status'
 import path from 'path'
+import { config } from '#server/common/env'
 
 const app = express()
 
@@ -10,7 +11,7 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')))
+app.use('/api/gif', express.static(path.join(config.rootDir)))
 
 app.use('/api', uploadRoutes)
 app.use('/api', statusRoutes)

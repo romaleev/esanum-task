@@ -1,8 +1,9 @@
 import { Request, Response } from 'express'
 import { queue } from '#server/services/queueService'
 import { GifJob } from '#server/types/jobTypes'
+import { v4 as uuidv4 } from 'uuid'
 
-export const uploadFile = async (req: Request, res: Response): Promise<void> => {
+export const produceJob = async (req: Request, res: Response): Promise<void> => {
 	try {
 		if (!req.file) {
 			res.status(400).json({ error: 'No file uploaded' })
@@ -21,10 +22,13 @@ export const uploadFile = async (req: Request, res: Response): Promise<void> => 
 
 		console.log(`📤 [UPLOAD] Queue is reachable`)
 		const job: GifJob = await queue.add(
-			{ filePath: req.file.path },
+			{ filename: req.file.filename },
 			{
 				removeOnComplete: { age: 300, count: 10 }, // Keep job for 5 minutes (300s)
 				removeOnFail: { age: 600, count: 5 }, // Keep failed jobs for 10 minutes (600s)
+				jobId: uuidv4(),
+				attempts: 3, // Retry up to 3 times
+				backoff: { type: 'fixed', delay: 5000 },
 			},
 		)
 

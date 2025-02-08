@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import cron from 'node-cron'
-import { config, isDev } from '#server/config/env'
+import { config, isDev } from '#server/common/env'
 
 const UPLOADS_DIR = path.join(process.cwd(), 'uploads')
 const MAX_FILE_AGE_MS = parseInt(config.maxFileAgeMin) * 60 * 1000 // 10min

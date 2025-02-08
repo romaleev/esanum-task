@@ -1,21 +1,19 @@
 import { NextFunction, Router, Request, Response } from 'express'
 import multer from 'multer'
-import { uploadFile } from '#server/controllers/uploadController'
+import { produceJob as produceJob } from '#server/controllers/uploadController'
 import { validateUpload } from '#server/middleware/validateUpload'
-import { config } from '#server/config/env'
-import path from 'path'
+import { config } from '#server/common/env'
 
 const router = Router()
 
 const upload = multer({
 	limits: { fileSize: parseInt(config.maxUploadFileSize) * 1024 * 1024 },
-	dest: path.join('app/uploads/'),
+	dest: config.rootDir,
 }).single('file')
 
 router.post(
 	'/upload',
 	(req: Request, res: Response, next: NextFunction) => {
-		console.log('Received upload request:', req.body)
 		upload(req, res, (err) => {
 			if (err instanceof multer.MulterError) {
 				if (err.code === 'LIMIT_FILE_SIZE') {
@@ -30,7 +28,7 @@ router.post(
 		})
 	},
 	validateUpload,
-	uploadFile,
+	produceJob,
 )
 
 export default router

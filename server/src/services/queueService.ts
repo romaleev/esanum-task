@@ -1,5 +1,5 @@
 import Bull from 'bull'
-import { config } from '#server/config/env'
+import { config } from '#server/common/env'
 
 console.log(`Connecting to Redis at ${config.redisHost}:${config.redisPort}`)
 
