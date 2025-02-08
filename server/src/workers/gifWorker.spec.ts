@@ -1,7 +1,7 @@
-import { queue } from '#server/services/queueService'
+import { queue, queueEvents } from '#server/services/queueService'
 import path from 'path'
 import { promises as fs } from 'fs'
-import { Job } from 'bull'
+import { Job } from 'bullmq'
 import { exists } from '#server/common/util'
 
 describe('Gif Worker', () => {
@@ -19,9 +19,9 @@ describe('Gif Worker', () => {
 			console.log('Error: ', err)
 		}
 
-		const job: Job<string> = await queue.add({ filename }, { jobId: gifName })
+		const job: Job<string> = await queue.add('gif-processing', { filename }, { jobId: gifName })
 
-		await job.finished()
+		await job.waitUntilFinished(queueEvents)
 
 		const expectedPath = path.join('./uploads', `${job.id}.gif`)
 		expect(await exists(expectedPath)).toBe(true)

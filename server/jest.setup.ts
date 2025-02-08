@@ -1,14 +1,16 @@
 process.env.NODE_ENV = 'development'
 
-import { queue } from '#server/services/queueService'
+import { queue, queueEvents } from '#server/services/queueService'
 
 beforeAll(async () => {
-	await queue.obliterate({ force: true })
-	await queue.clean(0, 'completed')
-	await queue.clean(0, 'failed')
-	await queue.clean(0, 'wait')
+	await queue.drain()
+	await queue.clean(0, 1000, 'completed')
+	await queue.clean(0, 1000, 'failed')
+	await queue.clean(0, 1000, 'wait')
+	await queue.clean(0, 1000, 'delayed')
 })
 
 afterAll(async () => {
-	await queue.close() // Ensure Redis queue is closed
+	await queue.close()
+	await queueEvents.close()
 })

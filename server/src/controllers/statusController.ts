@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { queue } from '#server/services/queueService'
+import { queue, queueEvents } from '#server/services/queueService'
 import { GifJob, JobStatusResponse } from '#server/types/jobTypes'
 
 export const streamJobStatus = async (req: Request, res: Response<JobStatusResponse>) => {
@@ -16,33 +16,38 @@ export const streamJobStatus = async (req: Request, res: Response<JobStatusRespo
 	res.setHeader('Cache-Control', 'no-cache')
 	res.setHeader('Connection', 'keep-alive')
 
-	// Function to send job status updates
-	const sendStatus = async () => {
-		const state = await job.getState()
-		const responseData = JSON.stringify({
-			status: state,
-			gifUrl: state === 'completed' ? `/api/gif/${job.id}.gif` : null,
-		})
+	// Send initial status
+	const sendStatus = async (status: string, gifUrl?: string | null) => {
+		const responseData = JSON.stringify({ status, gifUrl })
 		res.write(`data: ${responseData}\n\n`)
 	}
 
-	// Send initial status
-	await sendStatus()
+	// Get current status and send
+	const initialState = await job.getState()
+	await sendStatus(initialState, initialState === 'completed' ? `/api/gif/${job.id}.gif` : null)
 
-	// Check job status every second
-	const interval = setInterval(async () => {
-		await sendStatus()
-
-		// Stop sending events once job is completed or failed
-		const state = await job.getState()
-		if (state === 'completed' || state === 'failed') {
-			clearInterval(interval)
+	// Subscribe to job events instead of polling
+	const onJobComplete = async (job: { jobId: string; returnvalue?: string }) => {
+		if (job.jobId === jobId) {
+			await sendStatus('completed', `/api/gif/${job.jobId}.gif`)
 			res.end()
 		}
-	}, 1000)
+	}
 
-	// Handle client disconnect
+	const onJobFailed = async (job: { jobId: string }) => {
+		if (job.jobId === jobId) {
+			await sendStatus('failed', null)
+			res.end()
+		}
+	}
+
+	// Listen for job events
+	queueEvents.on('completed', onJobComplete)
+	queueEvents.on('failed', onJobFailed)
+
+	// Cleanup listeners when client disconnects
 	req.on('close', () => {
-		clearInterval(interval)
+		queueEvents.off('completed', onJobComplete)
+		queueEvents.off('failed', onJobFailed)
 	})
 }

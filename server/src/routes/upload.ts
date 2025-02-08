@@ -1,6 +1,6 @@
 import { NextFunction, Router, Request, Response } from 'express'
 import multer from 'multer'
-import { produceJob as produceJob } from '#server/controllers/uploadController'
+import { produceJob } from '#server/controllers/uploadController'
 import { validateUpload } from '#server/middleware/validateUpload'
 import { config } from '#server/common/env'
 

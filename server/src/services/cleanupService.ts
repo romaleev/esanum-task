@@ -9,7 +9,7 @@ const MAX_FILE_AGE_MS = parseInt(config.maxFileAgeMin) * 60 * 1000 // 10min
 /**
  * Deletes old files from the uploads directory based on modification time.
  */
-function runCleanupTask(): void {
+const runCleanupTask = (): void => {
 	if (isDev) console.log('🧹 Running cleanup task...')
 	try {
 		const files = fs.readdirSync(UPLOADS_DIR)
@@ -29,7 +29,7 @@ function runCleanupTask(): void {
 /**
  * Starts the cleanup cron job, running every 30 minutes.
  */
-export function startCleanupScheduler(): void {
+export const startCleanupScheduler = (): void => {
 	cron.schedule(`*/${config.maxFileAgeMin} * * * *`, () => {
 		if (isDev) console.log('⏳ Running scheduled cleanup...')
 		runCleanupTask()
