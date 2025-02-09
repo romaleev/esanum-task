@@ -132,3 +132,6 @@ dist
 
 bak
 uploads
+
+playwright-report
+test-results

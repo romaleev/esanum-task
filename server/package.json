@@ -10,8 +10,8 @@
 		"build": "tsc --project tsconfig.server.json && tsc-alias --project tsconfig.server.json",
 		"prod:server": "node /app/server/dist/index.js",
 		"prod:worker": "node /app/server/dist/workers/gifWorker.js",
-		"test": "jest --no-watchman --maxWorkers=80% --detectOpenHandles --testPathIgnorePatterns '^.*/load\\.spec\\.ts$'",
-		"test:load": "node --import=tsx tests/load.spec.ts",
+		"test": "jest --no-watchman --maxWorkers=80% --detectOpenHandles --testPathIgnorePatterns '^.*/tests/.*$'",
+		"test:load": "node --import=tsx tests/load/load.spec.ts",
 		"test:watch": "jest --watch --maxWorkers=80%",
 		"test:coverage": "jest --coverage"
 	},
