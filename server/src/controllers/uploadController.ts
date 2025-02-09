@@ -30,7 +30,7 @@ export const produceJob = async (req: Request, res: Response): Promise<void> => 
 			{
 				jobId: uuidv4(),
 				removeOnComplete: { age: 300, count: 10 }, // Keep job for 5 minutes (300s)
-				removeOnFail: { age: 600, count: 5 }, // Keep failed jobs for 10 minutes (600s)
+				removeOnFail: { age: 300, count: 5 }, // Keep failed jobs for 5 minutes (600s)
 				attempts: 3, // Retry up to 3 times
 				backoff: { type: 'fixed', delay: 5000 },
 			},

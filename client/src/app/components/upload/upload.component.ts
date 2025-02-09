@@ -96,7 +96,7 @@ export class UploadComponent {
 					this.gifUrl = response.gifUrl
 					this.loading = false
 					this.selectedFile = null
-					// this.snackBar.open('🎉 GIF conversion complete!', 'Close', { duration: 3000 })
+					this.snackBar.open('🎉 GIF conversion complete!', 'Close', { duration: 3000 })
 					eventSource.close() // Stop listening once done
 				} else if (response.status === 'failed') {
 					this.loading = false
