@@ -4,6 +4,7 @@ import path from 'path'
 import { performance } from 'perf_hooks'
 import cliProgress from 'cli-progress'
 import { EventSource } from 'eventsource'
+import { JobStatusResponse } from '#server/types/jobTypes'
 
 const UPLOAD_BATCH_SIZE = 100
 const INTERVAL_MS = 6000
@@ -41,11 +42,43 @@ const processingProgress = multiBar.create(
 	},
 )
 
-// Interface for SSE response
-interface JobStatusResponse {
-	status: 'waiting' | 'active' | 'completed' | 'failed' | 'stuck'
-	gifUrl?: string | null
-	error?: string
+const uploadFile = async () => {
+	try {
+		const res = await request(API_URL)
+			.post('/api/upload')
+			.attach('file', fileBuffer, 'sample_1024_10SEC.mp4')
+		uploadProgress.increment()
+		return res.body.jobId
+	} catch (err) {
+		console.error(`❌ Upload failed:`, err)
+		return null
+	}
+}
+
+const statusEvent = (jobId: string, jobStats: { completed: number; failed: number }) => {
+	const eventSource = new EventSource(`${API_URL}/api/status/${jobId}`)
+
+	eventSource.onmessage = (event: MessageEvent) => {
+		const data: JobStatusResponse = JSON.parse(event.data)
+
+		if (data.status === 'completed') {
+			jobStats.completed++
+			processingProgress.increment()
+			eventSource.close()
+		} else if (data.status === 'failed') {
+			jobStats.failed++
+			console.error(`❌ Job ${jobId} failed`)
+			processingProgress.increment()
+			eventSource.close()
+		}
+	}
+
+	eventSource.onerror = () => {
+		console.error(`🚨 SSE Error for job ${jobId}`)
+		jobStats.failed++
+		processingProgress.increment()
+		eventSource.close()
+	}
 }
 
 const runTest = async (): Promise<void> => {
@@ -54,61 +87,26 @@ const runTest = async (): Promise<void> => {
 
 		console.log('\n🚀 Uploading files in batches...')
 
-		let completedJobs = 0
-		let failedJobs = 0
+		const jobStats = {
+			completed: 0,
+			failed: 0,
+		}
 		const jobIds: string[] = []
 
 		for (let i = 0; i < TOTAL_DURATION_MS / INTERVAL_MS; i++) {
-			const batchJobIds = await Promise.all(
-				Array.from({ length: UPLOAD_BATCH_SIZE }, async () => {
-					try {
-						const res = await request(API_URL)
-							.post('/api/upload')
-							.attach('file', fileBuffer, 'sample_1024_10SEC.mp4')
-						uploadProgress.increment()
-						return res.body.jobId
-					} catch (err) {
-						console.error(`❌ Upload failed:`, err)
-						return null
-					}
-				}),
-			)
+			const batchJobIds = await Promise.all(Array.from({ length: UPLOAD_BATCH_SIZE }, uploadFile))
 
 			const validBatchJobIds = batchJobIds.filter(Boolean) as string[]
 			jobIds.push(...validBatchJobIds)
 
 			// Immediately start processing the batch
-			validBatchJobIds.forEach((jobId) => {
-				const eventSource = new EventSource(`${API_URL}/api/status/${jobId}`)
-
-				eventSource.onmessage = (event: MessageEvent) => {
-					const data: JobStatusResponse = JSON.parse(event.data)
-
-					if (data.status === 'completed') {
-						completedJobs++
-						processingProgress.increment()
-						eventSource.close()
-					} else if (data.status === 'failed') {
-						failedJobs++
-						console.error(`❌ Job ${jobId} failed`)
-						processingProgress.increment()
-						eventSource.close()
-					}
-				}
-
-				eventSource.onerror = () => {
-					console.error(`🚨 SSE Error for job ${jobId}`)
-					failedJobs++
-					processingProgress.increment()
-					eventSource.close()
-				}
-			})
+			validBatchJobIds.forEach((jobId) => statusEvent(jobId, jobStats))
 
 			await sleep(INTERVAL_MS)
 		}
 
 		// ✅ **Wait until all jobs finish**
-		while (completedJobs + failedJobs < jobIds.length) {
+		while (jobStats.completed + jobStats.failed < jobIds.length) {
 			await sleep(POLL_INTERVAL_MS)
 		}
 
@@ -118,15 +116,15 @@ const runTest = async (): Promise<void> => {
 		const duration = ((endTime - startTime) / 1000).toFixed(2)
 
 		console.log(`\n📊 **Test Results:**`)
-		console.log(`✅ Completed: ${completedJobs}/${jobIds.length}`)
-		console.log(`❌ Failed: ${failedJobs}/${jobIds.length}`)
+		console.log(`✅ Completed: ${jobStats.completed}/${jobIds.length}`)
+		console.log(`❌ Failed: ${jobStats.failed}/${jobIds.length}`)
 		console.log(`⏳ Total Time: ${duration} seconds\n`)
 
-		if (completedJobs === jobIds.length) {
+		if (jobStats.completed === jobIds.length) {
 			console.log(`🎉 All ${jobIds.length} jobs completed successfully`)
 			process.exit(0)
 		} else {
-			console.error(`🚨 Some jobs failed: ${failedJobs}/${jobIds.length}`)
+			console.error(`🚨 Some jobs failed: ${jobStats.failed}/${jobIds.length}`)
 			process.exit(1)
 		}
 	} catch (error) {

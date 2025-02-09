@@ -8,6 +8,7 @@ import os from 'os'
 import { Job, Worker } from 'bullmq'
 
 const concurrency = isDev ? os.cpus().length - 1 : 1
+const ffmpegLogs = false
 
 new Worker(
 	'gifQueue',
@@ -35,7 +36,8 @@ new Worker(
 				outputPath,
 			])
 
-			ffmpeg.stderr.on('data', (data: Buffer) => console.error(`FFmpeg: ${data.toString()}`))
+			if (ffmpegLogs)
+				ffmpeg.stderr.on('data', (data: Buffer) => console.error(`FFmpeg: ${data.toString()}`))
 
 			ffmpeg.on('close', async (code: number) => {
 				if (code === 0) {

@@ -1,5 +1,4 @@
 import request from 'supertest'
-import app from '#server/app'
 import fs from 'fs'
 import path from 'path'
 import { EventSource } from 'eventsource'
@@ -10,7 +9,7 @@ describe('GET /api/status/:jobId (SSE)', () => {
 		const filePath = path.resolve('./tests/fixtures/sample_1024_10SEC.mp4')
 
 		// ✅ Upload file and get jobId
-		const uploadRes = await request(app)
+		const uploadRes = await request(`http://localhost:${config.port}`)
 			.post('/api/upload')
 			.attach('file', fs.readFileSync(filePath), 'sample_1024_10SEC.mp4')
 
