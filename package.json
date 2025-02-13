@@ -31,8 +31,8 @@
 		"test:e2e": "npx playwright test",
 		"lint": "eslint {client,server}/src/**/*.ts && prettier {client,server}/src/**/*.ts",
 		"lint:fix": "eslint --fix {client,server}/src/**/*.ts && prettier --write {client,server}/src/**/*.ts",
-		"update": "npm i npm-check-updates@latest --save-dev && ncu -u && npm i && npm audit fix && npm run lint && npm test",
-		"prepare": "husky install && npm run docker:init && playwright install"
+		"update": "npm i npm-check-updates@latest --save-dev && ncu --root -ws -u && npm i && npm audit fix && npm run lint && npm test",
+		"prepare": "husky && npm run docker:init && playwright install"
 	},
 	"workspaces": [
 		"client",
@@ -63,19 +63,17 @@
 	"homepage": "https://github.com/romaleev/esanum-task#readme",
 	"devDependencies": {
 		"@playwright/test": "^1.50.1",
-		"@types/supertest": "^6.0.2",
-		"eslint": "^9.19.0",
+		"eslint": "^9.20.1",
 		"eslint-config-prettier": "^10.0.1",
 		"eslint-plugin-prettier": "^5.2.3",
-		"globals": "^15.14.0",
+		"globals": "^15.15.0",
 		"husky": "^9.1.7",
 		"lint-staged": "^15.4.3",
 		"npm-check-updates": "^17.1.14",
 		"npm-run-all": "^4.1.5",
 		"playwright": "^1.50.1",
-		"prettier": "^3.4.2",
+		"prettier": "^3.5.0",
 		"prettier-eslint": "^16.3.0",
-		"prettier-plugin-organize-imports": "^4.1.0",
-		"supertest": "^7.0.0"
+		"prettier-plugin-organize-imports": "^4.1.0"
 	}
 }

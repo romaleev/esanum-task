@@ -23,6 +23,9 @@ services:
       restart_policy:
         condition: any
         delay: 5s
+      placement:
+        constraints:
+          - "node.role == worker"
 
   frontend:
     image: esanum-task-frontend:latest
