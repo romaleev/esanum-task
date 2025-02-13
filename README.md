@@ -14,7 +14,7 @@ A high-performance web service for converting MP4 videos to GIFs, designed for s
 - **🧹 Auto Cleanup**: Scheduled deletion of old files.
 
 ## Tech Stack
-- **Client**: Angular 16, Material UI, RxJS
+- **Client**: Angular 19, Material UI, RxJS
 - **Server**: Node.js, Express, Typescript
 - **Processing**: FFmpeg, BullMQ, Redis
 - **Testing**: Playwright, Supertest, Jest, Jasmine

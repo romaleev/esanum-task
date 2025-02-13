@@ -10,23 +10,22 @@
 }
 
 .upload-card {
-	padding: 30px;
+	padding: 20px;
 	width: 400px;
 	text-align: center;
 	background: white;
-	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 	border-radius: 8px;
-	margin-top: 20px;
 }
 
 .button-group {
 	display: flex;
-	gap: 10px;
+	gap: 20px;
 	justify-content: center;
 }
 
 .file-name {
-	margin-top: 15px;
+	margin-top: 20px;
 	font-weight: bold;
 	color: #333;
 	background: #eee;
@@ -43,15 +42,17 @@
 
 .result-card {
 	margin-top: 30px;
-	padding: 20px;
+	padding: 20px 20px 12px 20px;
 	width: 400px;
 	background: white;
-	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 	border-radius: 8px;
+	.title {
+		margin-bottom: 16px;
+	}
 }
 
 .gif-preview {
 	width: 100%;
 	border-radius: 8px;
-	margin-top: 10px;
 }

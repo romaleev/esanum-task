@@ -1,3 +1,6 @@
+networks:
+  esanum-network: # ✅ Ensure a shared network
+
 configs:
   backend_env:
     file: ./server/.env.production
@@ -7,6 +10,8 @@ services:
     image: esanum-task-backend:latest
     ports:
       - "3000:3000"
+    networks:
+      - esanum-network # ✅ Add backend to network
     environment:
       NODE_ENV: production
     configs:
@@ -23,14 +28,13 @@ services:
       restart_policy:
         condition: any
         delay: 5s
-      placement:
-        constraints:
-          - "node.role == worker"
 
   frontend:
     image: esanum-task-frontend:latest
     ports:
       - "4200:80"
+    networks:
+      - esanum-network # ✅ Add backend to network
     command: nginx -g 'daemon off;'
     depends_on:
       - backend
@@ -45,6 +49,8 @@ services:
     image: redis:latest
     ports:
       - "6379:6379"
+    networks:
+      - esanum-network # ✅ Add backend to network
     deploy:
       mode: replicated
       replicas: 1
@@ -59,6 +65,8 @@ services:
     configs:
       - source: backend_env
         target: /app/.env.production  # ✅ Mount it inside the container
+    networks:
+      - esanum-network # ✅ Add backend to network
     command: npm run prod:worker -w server
     depends_on:
       - backend

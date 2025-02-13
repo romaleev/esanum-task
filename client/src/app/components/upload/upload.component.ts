@@ -1,11 +1,23 @@
 import { Component, NgZone } from '@angular/core'
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http'
-import { MatSnackBar } from '@angular/material/snack-bar'
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar'
+import { MatCardModule } from '@angular/material/card'
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import { CommonModule } from '@angular/common'
+import { MatButtonModule } from '@angular/material/button'
 
 @Component({
 	selector: 'app-upload',
 	templateUrl: './upload.component.html',
 	styleUrls: ['./upload.component.scss'],
+	imports: [
+		CommonModule,
+		MatCardModule,
+		MatProgressSpinnerModule,
+		MatButtonModule,
+		MatSnackBarModule,
+	],
+	standalone: true,
 })
 export class UploadComponent {
 	selectedFile: File | null = null
@@ -45,6 +57,7 @@ export class UploadComponent {
 		}
 		input.value = ''
 	}
+
 	uploadFile(): void {
 		if (!this.selectedFile) return
 		this.loading = true

@@ -1,16 +1,22 @@
 import { TestBed } from '@angular/core/testing'
-import { RouterTestingModule } from '@angular/router/testing'
-import { AppComponent } from './app.component'
-import { UploadComponent } from './components/upload/upload.component'
-import { HttpClientModule } from '@angular/common/http'
-import { MatCardModule } from '@angular/material/card'
+import { provideHttpClient } from '@angular/common/http'
+import { provideAnimations } from '@angular/platform-browser/animations'
 import { MatSnackBarModule } from '@angular/material/snack-bar'
+import { provideRouter } from '@angular/router'
+import { AppComponent } from './app.component'
+import { UploadComponent } from '#client/components/upload/upload.component'
+import { importProvidersFrom } from '@angular/core'
 
 describe('AppComponent', () => {
 	beforeEach(() =>
 		TestBed.configureTestingModule({
-			imports: [RouterTestingModule, HttpClientModule, MatSnackBarModule, MatCardModule],
-			declarations: [AppComponent, UploadComponent],
+			imports: [AppComponent, UploadComponent],
+			providers: [
+				provideRouter([]),
+				provideHttpClient(),
+				provideAnimations(),
+				importProvidersFrom(MatSnackBarModule),
+			],
 		}),
 	)
 
