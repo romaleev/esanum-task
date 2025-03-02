@@ -12,8 +12,6 @@ services:
       - "3000:3000"
     networks:
       - esanum-network # ✅ Add backend to network
-    environment:
-      NODE_ENV: production
     configs:
       - source: backend_env
         target: /app/.env.production  # ✅ Mount it inside the container

@@ -18,6 +18,7 @@ export const produceJob = async (req: Request, res: Response): Promise<void> => 
 			.waitUntilReady()
 			.then(() => true)
 			.catch(() => false)
+
 		if (!isQueueReachable) {
 			res.status(500).json({ error: 'Queue service is not reachable' })
 			return

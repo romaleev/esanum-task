@@ -2,17 +2,17 @@
 	"name": "easnum-task",
 	"version": "1.0.0",
 	"description": "esanum task",
-	"main": "dist/index.js",
+	"main": "server/dist/index.js",
 	"private": true,
 	"scripts": {
-		"start": "npm-run-all --parallel start:client start:server redis:start",
+		"start": "trap 'npm run redis:stop' EXIT INT TERM && npm-run-all --parallel start:client start:server redis:start",
 		"start:client": "npm run start -w client",
 		"start:server": "npm run start -w server",
 		"build": "npm-run-all --parallel build:*",
 		"build:client": "npm run build -w client",
 		"build:server": "npm run build -w server",
-		"redis:start": "docker service ls | grep -w redis && docker service update --force redis || docker service create --name redis --publish 6379:6379 --detach redis:latest",
-		"redis:stop": "docker service rm redis",
+		"redis:start": "docker service ls | grep -w redis && docker service update --force redis || docker service create --name redis --publish 6379:6379 --detach redis:latest && wait-on tcp:localhost:6379",
+		"redis:stop": "docker service ls | grep -q redis && docker service rm redis",
 		"docker:init": "(docker info | grep 'Swarm: active' || docker swarm init)",
 		"docker:deploy": "docker stack deploy -c docker-stack.yml esanum-task",
 		"docker:build": "docker buildx bake --file docker-bake.hcl",
@@ -29,10 +29,10 @@
 		"test:watch:server": "npm run test:watch -w server",
 		"test:server:coverage": "npm run test:coverage -w server",
 		"test:e2e": "npx playwright test",
-		"lint": "eslint {client,server}/src/**/*.ts && prettier {client,server}/src/**/*.ts",
-		"lint:fix": "eslint --fix {client,server}/src/**/*.ts && prettier --write {client,server}/src/**/*.ts",
+		"lint": "eslint {client,server,e2e}/src/**/*.ts && prettier {client,server,e2e}/src/**/*.ts",
+		"lint:fix": "eslint --fix {client,server,e2e}/src/**/*.ts && prettier --write {client,server,e2e}/src/**/*.ts",
 		"update": "npm i npm-check-updates@latest --save-dev && ncu --root -ws -u && npm i && npm audit fix && npm run lint && npm test",
-		"prepare": "husky && npm run docker:init && playwright install"
+		"prepare": "husky && npm run docker:init && docker pull redis:latest && playwright install"
 	},
 	"workspaces": [
 		"client",
@@ -53,7 +53,14 @@
 		]
 	},
 	"keywords": [
-		"esanum-task"
+		"esanum-task",
+		"angular",
+		"node.js",
+		"typescript",
+		"docker",
+		"redis",
+		"bullmq",
+		"monorepo"
 	],
 	"author": "Roman Malieiev <aromaleev@gmail.com>",
 	"license": "MIT",
@@ -63,9 +70,9 @@
 	"homepage": "https://github.com/romaleev/esanum-task#readme",
 	"devDependencies": {
 		"@playwright/test": "^1.50.1",
+		"@types/eslint-config-prettier": "^6.11.3",
 		"eslint": "^9.20.1",
 		"eslint-config-prettier": "^10.0.1",
-		"eslint-plugin-prettier": "^5.2.3",
 		"globals": "^15.15.0",
 		"husky": "^9.1.7",
 		"lint-staged": "^15.4.3",

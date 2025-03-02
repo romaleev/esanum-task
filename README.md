@@ -44,19 +44,20 @@ A high-performance web service for converting MP4 videos to GIFs, designed for s
 
 ### Installation
 
-Install dependencies, [Docker](https://docs.docker.com/get-docker/) and [FFmpeg](https://ffmpeg.org/download.html)
-
-`npm install` Install dependencies
+Install [Docker](https://docs.docker.com/get-docker/), [FFmpeg](https://ffmpeg.org/download.html) and NPM dependencies
 
 `brew install --cask docker` Install Docker using brew example
 
-`brew install ffmpeg` Install FFmpeg using brew example
+`brew install ffmpeg` Install FFmpeg using [brew](https://brew.sh/) example
+
+`npm install` Install NPM dependencies
 
 ### Development
 
-Don't forget to stop Redis when exit development mode
+Start app in Development mode with hot reload (**Step 1**).
+The app will be available at `http://localhost:4200`.
 
-`npm run start` Start client, server, worker and redis
+`npm run start` Start client, server, worker and redis (**Step 1**)
 
 `npm run start:server` Start server and worker
 
@@ -66,7 +67,7 @@ Don't forget to stop Redis when exit development mode
 
 ### Testing
 
-Run application in development or production mode first
+Run the app in Development mode (**Step 1**) or Production mode (**Steps 1-2**) first.
 
 `npm run test` Run client, server and e2e tests
 
@@ -98,11 +99,12 @@ Build client, server and worker
 
 ### Production
 
-Docker commands for client, server, redis and workers images
+Start app in Production mode in Docker environment (**Steps 1-2**).
+The app will be available at `http://localhost:4200`.
 
-`npm run docker:build` Build Docker images
+`npm run docker:build` Build Docker images (**Step 1**)
 
-`npm run docker:deploy` Deploy Docker containers
+`npm run docker:deploy` Deploy Docker containers (**Step 2**)
 
 `npm run docker:rm` Remove Docker containers
 
@@ -124,7 +126,16 @@ Code quality checks and fixes
 
 `npm run update` Update libraries to the latest versions
 
+## Improvements
+
+- Use hash instead of uid for normalization
+
+- Use url query or local storage persistent state
+
 ## API Endpoints
+
 - **`POST /api/upload`**: Upload an MP4 file for conversion
+
 - **`GET /api/status/:jobId`**: Get real-time status of conversion
+
 - **`GET /api/gif/:jobId.gif`**: Retrieve the generated GIF
