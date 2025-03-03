@@ -2,13 +2,13 @@ import { NextFunction, Router, Request, Response } from 'express'
 import multer from 'multer'
 import { produceJob } from '#server/controllers/uploadController'
 import { validateUpload } from '#server/middleware/validateUpload'
-import { config } from '#server/common/env'
+import { rootDir, maxUploadFileSize } from '#server/common/env'
 
 const router = Router()
 
 const upload = multer({
-	limits: { fileSize: parseInt(config.maxUploadFileSize) * 1024 * 1024 },
-	dest: config.rootDir,
+	limits: { fileSize: parseInt(maxUploadFileSize) * 1024 * 1024 },
+	dest: rootDir,
 }).single('file')
 
 router.post(

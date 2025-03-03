@@ -3,13 +3,13 @@ networks:
 
 configs:
   backend_env:
-    file: ./server/.env.production
+    file: ../.env.production
 
 services:
   backend:
     image: esanum-task-backend:latest
     ports:
-      - "3000:3000"
+      - "3001:3001"
     networks:
       - esanum-network # ✅ Add backend to network
     configs:
@@ -30,7 +30,7 @@ services:
   frontend:
     image: esanum-task-frontend:latest
     ports:
-      - "4200:80"
+      - "4300:80"
     networks:
       - esanum-network # ✅ Add backend to network
     command: nginx -g 'daemon off;'
@@ -46,9 +46,10 @@ services:
   redis:
     image: redis:latest
     ports:
-      - "6379:6379"
+      - "6380:6380"
     networks:
       - esanum-network # ✅ Add backend to network
+    command: ["redis-server", "--port", "6380"]
     deploy:
       mode: replicated
       replicas: 1

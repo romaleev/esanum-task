@@ -2,14 +2,14 @@ import request from 'supertest'
 import fs from 'fs'
 import path from 'path'
 import { EventSource } from 'eventsource'
-import { config } from '#server/common/env'
+import { serverPort } from '#server/common/env'
 
 describe('GET /api/status/:jobId (SSE)', () => {
 	it('should stream job status updates via SSE', async () => {
 		const filePath = path.resolve('./tests/fixtures/sample_1024_10SEC.mp4')
 
 		// ✅ Upload file and get jobId
-		const uploadRes = await request(`http://localhost:${config.port}`)
+		const uploadRes = await request(`http://localhost:${serverPort}`)
 			.post('/api/upload')
 			.attach('file', fs.readFileSync(filePath), 'sample_1024_10SEC.mp4')
 
@@ -19,7 +19,7 @@ describe('GET /api/status/:jobId (SSE)', () => {
 		const jobId = uploadRes.body.jobId
 
 		// ✅ Open SSE connection to listen for status updates
-		const eventSource = new EventSource(`http://localhost:${config.port}/api/status/${jobId}`)
+		const eventSource = new EventSource(`http://localhost:${serverPort}/api/status/${jobId}`)
 
 		let jobCompleted = false
 		let jobFailed = false

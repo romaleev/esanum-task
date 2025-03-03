@@ -5,6 +5,9 @@
   "compilerOptions": {
 		"baseUrl": "./",
 		"paths": {
+			"#common/*": [
+				"../common/*"
+			],
 			"#client/*": ["src/app/*"]
 		},
     "outDir": "./dist/out-tsc",

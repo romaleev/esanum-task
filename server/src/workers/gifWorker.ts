@@ -3,7 +3,7 @@ import { spawn } from 'child_process'
 import path from 'path'
 import { promises as fs } from 'fs'
 import { JobEventPayload, JobFailedEventPayload, GifJobData } from '#server/types/jobTypes'
-import { isDev, config } from '#server/common/env'
+import { isDev, rootDir, redisHost, redisPort } from '#server/common/env'
 import os from 'os'
 import { Job, Worker } from 'bullmq'
 
@@ -14,8 +14,8 @@ new Worker(
 	'gifQueue',
 	async (job: Job<GifJobData>) => {
 		if (isDev) console.log(`🔔 [WORKER] Job received - ID: ${job.id}`)
-		const inputPath = path.join(config.rootDir, job.data.filename)
-		const outputPath = path.join(config.rootDir, `${job.id}.gif`)
+		const inputPath = path.join(rootDir, job.data.filename)
+		const outputPath = path.join(rootDir, `${job.id}.gif`)
 
 		console.log(`🎬 [WORKER] Processing input file ${inputPath}`)
 		console.log(`🎬 [WORKER] Output file path: ${outputPath}`)
@@ -45,7 +45,7 @@ new Worker(
 
 					// Delete input file
 					try {
-						const inputPath = path.join(config.rootDir, job.data.filename)
+						const inputPath = path.join(rootDir, job.data.filename)
 						await fs.rm(inputPath)
 						console.log(`🗑️ Deleted: ${inputPath}`)
 					} catch (err) {
@@ -60,7 +60,7 @@ new Worker(
 		})
 	},
 	{
-		connection: { host: config.redisHost, port: Number(config.redisPort) },
+		connection: { host: redisHost, port: Number(redisPort) },
 		limiter: {
 			max: 1000,
 			duration: 60000,

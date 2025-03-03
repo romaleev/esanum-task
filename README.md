@@ -67,13 +67,17 @@ The app will be available at `http://localhost:4200`.
 
 ### Testing
 
-Run the app in Development mode (**Step 1**) or Production mode (**Steps 1-2**) first.
+Run the app in Development mode (**Step 1**) and Production mode (**Steps 1-2**) first.
 
 `npm run test` Run client, server and e2e tests
 
 `npm run test:load` Run load testing (1000 requests/min)
 
 `npm run test:e2e` Run Playwright end-to-end tests
+
+`npm run test:e2e:local` Run end-to-end tests for local environment
+
+`npm run test:e2e:docker` Run end-to-end tests for Docker environment
 
 `npm run test:client` Run client tests
 
